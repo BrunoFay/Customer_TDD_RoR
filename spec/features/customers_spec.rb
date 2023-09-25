@@ -58,4 +58,23 @@ RSpec.feature "Customers", type: :feature do
     expect(page).to have_content(customer[:email])
     expect(page).to have_content(customer[:phone])
   end
+
+  scenario "customer index" do
+    customer_one = Customer.create(
+      name: Faker::Name.name,
+      email: Faker::Internet.email,
+      phone: Faker::PhoneNumber.phone_number,
+      avatar: Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/avatar.png", "image/png"),
+      smoker: ['S','N'].sample
+    )
+    customer_two = Customer.create(
+      name: Faker::Name.name,
+      email: Faker::Internet.email,
+      phone: Faker::PhoneNumber.phone_number,
+      avatar: Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/avatar.png", "image/png"),
+      smoker: ['S','N'].sample
+    )
+    visit(customers_path)
+    expect(page).to have_content(customer_one.name).and have_content(customer_two.name)
+  end
 end
