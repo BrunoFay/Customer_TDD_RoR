@@ -77,4 +77,23 @@ RSpec.feature "Customers", type: :feature do
     visit(customers_path)
     expect(page).to have_content(customer_one.name).and have_content(customer_two.name)
   end
+
+  scenario "edit customer" do
+    customer = Customer.create(
+      name: Faker::Name.name,
+      email: Faker::Internet.email,
+      phone: Faker::PhoneNumber.phone_number,
+      avatar: Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/avatar.png", "image/png"),
+      smoker: ['S','N'].sample
+    )
+    new_name = Faker::Name.name
+
+    visit(edit_customer_path(customer))
+    fill_in("customer_name", with: new_name)
+    click_on("Atualizar")
+
+    expect(page).to have_current_path(customers_path(customer))
+    expect(page).to have_content("Cliente atualizado com sucesso")
+    expect(page).to have_content(new_name)
+  end
 end

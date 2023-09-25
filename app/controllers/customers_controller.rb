@@ -1,9 +1,10 @@
 class CustomersController < ApplicationController
+  before_action :set_customer, only: [:edit, :update, :show, :delete]
   def index
     @customers = Customer.all
   end
   def show
-    @customer = Customer.find_by_id(params[:id])
+
   end
   def new
     @customer = Customer.new
@@ -19,15 +20,23 @@ class CustomersController < ApplicationController
   end
 
   def update
-  end
-
-  def delete
+    if @customer.update(customer_params)
+      redirect_to customers_path(@customer), notice: "Cliente atualizado com sucesso"
+    else
+      render :edit
+    end
   end
 
   def edit
   end
+  def delete
+  end
 
   private
+
+  def set_customer
+    @customer = Customer.find_by_id(params[:id])
+  end
   def customer_params
     params.require(:customer).permit(:id, :name, :email, :phone, :avatar, :smoker)
   end
