@@ -96,4 +96,16 @@ RSpec.feature "Customers", type: :feature do
     expect(page).to have_content("Cliente atualizado com sucesso")
     expect(page).to have_content(new_name)
   end
+  scenario "" do
+    customer = Customer.create(
+      name: Faker::Name.name,
+      email: Faker::Internet.email,
+      phone: Faker::PhoneNumber.phone_number,
+      avatar: Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/avatar.png", "image/png"),
+      smoker: ['S','N'].sample
+    )
+    visit(customers_path)
+    find(:xpath, "/html/body/a[1]").click
+    expect(page).to have_content("Cliente excluido com sucesso")
+  end
 end

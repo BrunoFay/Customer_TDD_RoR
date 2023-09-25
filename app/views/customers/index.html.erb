@@ -7,5 +7,6 @@
   <p>Name: <%= customer[:name] %></p>
   <p>Email: <%= customer[:email] %></p>
   <p>Phone: <%= customer[:phone] %></p>
+  <%= link_to "Excluir", customer, method: :delete %>
 <% end %>
 <%= link_to "Novo cliente", new_customer_path %>
