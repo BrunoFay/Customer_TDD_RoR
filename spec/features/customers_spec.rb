@@ -16,18 +16,12 @@ RSpec.feature "Customers", type: :feature do
   end
 
   scenario "create a customer" do
-    new_customer = {
-      name: Faker::Name.name,
-      email: Faker::Internet.email,
-      phone: Faker::PhoneNumber.phone_number,
-      avatar: Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/avatar.png", "image/png"),
-      smoker: ['S','N'].sample
-    }
+    new_customer = create(:customer)
     visit(new_customer_path)
     fill_in("customer_name", with: new_customer[:name])
     fill_in("customer_email", with: new_customer[:email])
     fill_in("customer_phone", with: new_customer[:phone])
-    attach_file("customer_avatar", new_customer[:avatar].path)
+    attach_file("customer_avatar", new_customer[:avatar])
     choose(option: new_customer[:smoker])
     click_on('criar')
 
@@ -46,13 +40,7 @@ RSpec.feature "Customers", type: :feature do
   end
 
   scenario "show a customer" do
-    customer = Customer.create(
-      name: Faker::Name.name,
-      email: Faker::Internet.email,
-      phone: Faker::PhoneNumber.phone_number,
-      avatar: Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/avatar.png", "image/png"),
-      smoker: ['S','N'].sample
-    )
+    customer = create(:customer)
     visit(customers_path(customer))
     expect(page).to have_content(customer[:name])
     expect(page).to have_content(customer[:email])
@@ -60,32 +48,14 @@ RSpec.feature "Customers", type: :feature do
   end
 
   scenario "customer index" do
-    customer_one = Customer.create(
-      name: Faker::Name.name,
-      email: Faker::Internet.email,
-      phone: Faker::PhoneNumber.phone_number,
-      avatar: Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/avatar.png", "image/png"),
-      smoker: ['S','N'].sample
-    )
-    customer_two = Customer.create(
-      name: Faker::Name.name,
-      email: Faker::Internet.email,
-      phone: Faker::PhoneNumber.phone_number,
-      avatar: Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/avatar.png", "image/png"),
-      smoker: ['S','N'].sample
-    )
+    customer_one = create(:customer)
+    customer_two = create(:customer)
     visit(customers_path)
     expect(page).to have_content(customer_one.name).and have_content(customer_two.name)
   end
 
   scenario "edit customer" do
-    customer = Customer.create(
-      name: Faker::Name.name,
-      email: Faker::Internet.email,
-      phone: Faker::PhoneNumber.phone_number,
-      avatar: Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/avatar.png", "image/png"),
-      smoker: ['S','N'].sample
-    )
+    customer = create(:customer)
     new_name = Faker::Name.name
 
     visit(edit_customer_path(customer))
@@ -96,14 +66,8 @@ RSpec.feature "Customers", type: :feature do
     expect(page).to have_content("Cliente atualizado com sucesso")
     expect(page).to have_content(new_name)
   end
-  scenario "" do
-    customer = Customer.create(
-      name: Faker::Name.name,
-      email: Faker::Internet.email,
-      phone: Faker::PhoneNumber.phone_number,
-      avatar: Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/avatar.png", "image/png"),
-      smoker: ['S','N'].sample
-    )
+  scenario "destroy customer" do
+    customer = create(:customer)
     visit(customers_path)
     find(:xpath, "/html/body/a[1]").click
     expect(page).to have_content("Cliente excluido com sucesso")
