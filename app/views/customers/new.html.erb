@@ -1,2 +1,28 @@
+<% if @customer.errors.any? %>
+  <ul>
+    <% @customer.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+  </ul>
+<% end %>
+
 <h1>Novo cliente</h1>
-<%= button_tag "criar", type: 'submit' %>
+<%= form_for @customer,  data: { turbo: false }  do |f| %>
+  <%= f.label :name %>
+  <%= f.text_field :name %>
+
+  <%= f.label :email %>
+  <%= f.text_field :email %>
+
+  <%= f.label :phone %>
+  <%= f.text_field :phone %>
+
+  <%= f.label :avatar %>
+  <%= f.file_field :avatar %>
+
+  <%= f.radio_button :smoker, 'S' %>
+  <%= f.label :smoke, 'Sim' %>
+  <%= f.radio_button :smoker, 'N' %>
+  <%= f.label :smoker, 'Não' %>
+  <%= f.submit "criar" %>
+<% end %>
